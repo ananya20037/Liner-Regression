@@ -1,0 +1,69 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the data into a DataFrame
+data = {
+    'Size': [1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400],
+    'Bedrooms': [3, 3, 3, 4, 4, 4, 5, 5, 5, 5],
+    'Age': [10, 15, 20, 15, 10, 20, 25, 20, 30, 40],
+    'Price': [300000, 320000, 340000, 360000, 400000, 410000, 450000, 470000, 480000, 500000]
+}
+df = pd.DataFrame(data)
+
+
+
+# Feature and target selection
+X = df[['Size', 'Bedrooms', 'Age']]
+y = df['Price']
+
+# Splitting data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Model initialization and training
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Model prediction
+y_pred = model.predict(X_test)
+
+# Evaluation metrics
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse}")
+print(f"R-squared: {r2}")
+
+# Plotting the Actual vs Predicted values
+plt.figure(figsize=(10, 5))
+plt.scatter(y_test, y_pred, color='blue')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices')
+plt.title('Actual vs Predicted Prices')
+plt.show()
+
+# Visualizing Residuals
+residuals = y_test - y_pred
+plt.figure(figsize=(10, 5))
+sns.histplot(residuals, kde=True)
+plt.xlabel('Residuals')
+plt.title('Distribution of Residuals')
+plt.show()
+
+# Displaying correlation heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()
+
+
+
+
+
+
